@@ -12,10 +12,7 @@ import pl.coderslab.users.dto.CreateUserRequest;
 import pl.coderslab.users.dto.EditUserRequest;
 import pl.coderslab.users.dto.UserResponse;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +27,6 @@ public class UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     public List<UserResponse> getUsers() {
@@ -42,23 +38,27 @@ public class UserService {
                         user.getEmail(),
                         user.getRoles().stream()
                                 .map(Role::getName)
-                                .collect(Collectors.toSet()),
-                        user.getEvents().stream()
-                                .map(Event::getTitle)
                                 .collect(Collectors.toSet())
                 ))
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<User> getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+//    public ResponseEntity<User> getUserById(Long id) {
+//        User user = userRepository.findById(id).orElse(null);
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+//    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public Long createUser(CreateUserRequest createUserRequest) {
-        if (userRepository.existsByEmail(createUserRequest.email().trim().toLowerCase(Locale.ROOT))) {
+        String email = createUserRequest.email().trim().toLowerCase(Locale.ROOT);
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already in use");
         }
+
+        validatePassword(createUserRequest.password());
 
         Set<Role> roleEntities = new HashSet<>(roleRepository.findAllById(createUserRequest.roleIds()));
         if (roleEntities.size() != createUserRequest.roleIds().size()) {
@@ -73,6 +73,39 @@ public class UserService {
         u.setRoles(roleEntities);
 
         return userRepository.save(u).getId();
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+
+        String trimmedPassword = password.trim();
+        List<String> errors = new ArrayList<>();
+
+        if (trimmedPassword.length() < 8) {
+            errors.add("Password must be at least 8 characters long");
+        }
+
+        if (!hasLowercase(trimmedPassword)) {
+            errors.add("Password must contain at least one lowercase letter");
+        }
+
+        if (!hasUppercase(trimmedPassword)) {
+            errors.add("Password must contain at least one uppercase letter");
+        }
+
+        if (!hasDigit(trimmedPassword)) {
+            errors.add("Password must contain at least one digit");
+        }
+
+        if (isCommonPassword(trimmedPassword)) {
+            errors.add("Password is too common, please choose a stronger password");
+        }
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException("Password validation failed: " + String.join(", ", errors));
+        }
     }
 
     public void deleteUser(long id) {
@@ -94,7 +127,6 @@ public class UserService {
     public User save(User user) {
         return userRepository.save(user);
     }
-
 
     public void updateUser(EditUserRequest editRequest) {
         User user = userRepository.findById(editRequest.id())
@@ -120,6 +152,32 @@ public class UserService {
 
     public long getTotalUsersCount() {
         return userRepository.count();
+    }
+
+    public List<User> getUserByLastName(String lastName) {
+        return userRepository.findByLastName(lastName);
+    }
+
+    private boolean hasLowercase(String password) {
+        return password.matches(".*[a-z].*");
+    }
+
+    private boolean hasUppercase(String password) {
+        return password.matches(".*[A-Z].*");
+    }
+
+    private boolean hasDigit(String password) {
+        return password.matches(".*\\d.*");
+    }
+
+    private boolean isCommonPassword(String password) {
+        Set<String> commonPasswords = Set.of(
+                "password", "123456", "password123", "admin", "qwerty",
+                "letmein", "welcome", "monkey", "dragon", "master",
+                "123456789", "qwerty123", "password1", "admin123",
+                "welcome123", "login", "guest", "test", "user"
+        );
+        return commonPasswords.contains(password.toLowerCase());
     }
 }
 

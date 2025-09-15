@@ -9,11 +9,11 @@ import java.util.Set;
 
 public record CreateUserRequest(
         @NotBlank(message = "First name is required")
-        @Size(max = 50, message = "First name too long")
+        @Size(min = 2, max = 50, message = "First name between 2 and 30")
         String firstName,
 
         @NotBlank(message = "Last name is required")
-        @Size(max = 50, message = "Last name too long")
+        @Size(min = 2, max = 30, message = "Last name between 2 and 30")
         String lastName,
 
         @NotBlank(message = "Email is required")

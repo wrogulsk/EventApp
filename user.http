@@ -1,30 +1,48 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
 
-### POST request to add user
-POST http://localhost:8080/user/update
+### GET request to see all users
+GET http://localhost:8080/users
 
-{
+### GET request to see User with specific ID
+GET http://localhost:8080/users/2
 
-### Update User Email
-PUT http://localhost:8080/users/6/email
-Content-Type: application/json
+### GET total number of users
+GET http://localhost:8080/users/total
 
-{
-  "email": "newemail@example.com"
-}
-###Deleting 5 user
-DELETE http://localhost:8080/users/delete/6
+### GET user by LastName
+GET http://localhost:8080/users/lastname/Lewandowska
+
 
 ### POST request to add user
 POST http://localhost:8080/users/add
 Content-Type: application/json
 
 {
-  "firstName": "Admin",
-  "lastName": "Adminowski",
-  "email": "admin@mail.com",
-  "password": "haslo",
-  "roleIds": [2]
+  "firstName": "Jacek",
+  "lastName": "Krzynowek",
+  "email": "krzynowek@mail",
+  "password": "Krzynowek10",
+  "roleIds": [1]
 }
+
+### Update User via ID
+PUT http://localhost:8080/users/edit/19
+Content-Type: application/json
+
+{
+  "id": 19,
+  "firstName": "John",
+  "lastName": "Smith",
+  "email": "john.smith@example.com",
+  "roleIds": [1, 2]
+}
+
+### Update User Email
+PUT http://localhost:8080/users/20/email
+Content-Type: application/json
+
+{
+  "email": "newemail@example.com"
+}
+
+###DELETING
+DELETE http://localhost:8080/users/delete/19

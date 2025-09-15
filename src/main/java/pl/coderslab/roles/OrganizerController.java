@@ -158,10 +158,8 @@ public class OrganizerController {
 
             User user = null;
             if (editEventRequest.userId() != null) {
-                ResponseEntity<User> userResponse = userService.getUserById(editEventRequest.userId());
-                if (userResponse.getStatusCode().is2xxSuccessful() && userResponse.getBody() != null) {
-                    user = userResponse.getBody();
-                } else {
+                user = userService.getUserById(editEventRequest.userId());
+                if (user == null) {
                     throw new IllegalArgumentException("User not found with ID: " + editEventRequest.userId());
                 }
             }
