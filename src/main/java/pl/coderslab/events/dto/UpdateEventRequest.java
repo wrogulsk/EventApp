@@ -1,5 +1,6 @@
 package pl.coderslab.events.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,28 +13,31 @@ import java.util.Set;
 
 public record UpdateEventRequest(
         @NotBlank(message = "Title is required")
-        @Size(max = 80, message = "Title too long")
+        @Size(min = 5, max = 80, message = "Title must be between 5 - 80 characters")
         String title,
 
         @NotBlank(message = "Organizer is required")
-        @Size(max = 50, message = "Too long")
+        @Size(min = 5, max = 50, message = "Organizer must be between 5 - 80 characters")
         String organizer,
 
-        @NotBlank(message = "The date can't be past")
+        @NotNull(message = "Event date is required")
+        @Future(message = "Event date must be in the future")
         LocalDateTime startAt,
 
-        @NotBlank(message = "The date can't be future")
+        @NotNull(message = "Event date is required")
+        @Future(message = "Event date must be in the future")
         LocalDateTime endAt,
 
-        @NotBlank(message = "Amount of participants can't be bigger than capacity of location")
+        @NotNull(message = "Amount of participants can't be bigger than capacity of location")
         Integer capacity,
 
-        @NotNull(message = "Location ID is required")
+        @NotNull(message = "Choose location")
         Location location,
 
-        @NotNull(message = "User ID is required")
+        @NotNull(message = "User is needed")
         User user,
 
-        Set<Tag> tags
+        @NotNull(message = "At least one tag is required")
+        Set<Tag>tags
 ) {
 }

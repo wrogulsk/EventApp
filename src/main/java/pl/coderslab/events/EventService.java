@@ -14,6 +14,8 @@ import pl.coderslab.registrations.RegistrationStatus;
 import pl.coderslab.users.User;
 import pl.coderslab.users.UserRepository;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -89,11 +91,13 @@ public class EventService {
         return eventRepository.findAllCities();
     }
 
-    public List<String> getAllCitiesByLocation() {
-        return eventRepository.findAllCitiesFromLocations();
-    }
-
     public Long createEvent(CreateEventRequest createEventRequest) {
+
+        validateEventRequest(createEventRequest);
+
+        if (eventRepository.existsByTitleAndStartAt(createEventRequest.title(), createEventRequest.startAt())) {
+            throw new IllegalArgumentException("Event with same title and date already exists");
+        }
 
         Event event = new Event();
         event.setOrganizer(createEventRequest.organizer().trim());
@@ -108,8 +112,21 @@ public class EventService {
         return eventRepository.save(event).getId();
     }
 
+    private void validateEventRequest(CreateEventRequest request) {
+
+        if (!request.endAt().isAfter(request.startAt())) {
+            throw new IllegalArgumentException("Event end time must be after start time");
+        }
+
+        if (!request.startAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Event start time must be in the future");
+        }
+
+    }
+
     public Long updateEvent(Long id, UpdateEventRequest updateEventRequest) {
         Event event = eventRepository.findById(id).orElse(null);
+        validateEventUpdate(updateEventRequest);
         if (event == null) {
             return 0L;
         }
@@ -125,6 +142,19 @@ public class EventService {
 
         return eventRepository.save(event).getId();
     }
+
+    private void validateEventUpdate(UpdateEventRequest request) {
+
+        if (!request.endAt().isAfter(request.startAt())) {
+            throw new IllegalArgumentException("Event end time must be after start time");
+        }
+
+        if (!request.startAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Event start time must be in the future");
+        }
+
+    }
+
 
     public void deleteEvent(Long id) {
         Event event = eventRepository.findById(id).orElse(null);
@@ -157,14 +187,6 @@ public class EventService {
         return registrationRepository.save(registration);
     }
 
-    public void unregisterUserFromEvent(Long userId, Long eventId) {
-        Registration registration = registrationRepository
-                .findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new IllegalArgumentException("Registration not found"));
-
-        registrationRepository.delete(registration);
-    }
-
     public boolean isUserRegisteredForEvent(Long userId, Long eventId) {
         return registrationRepository.existsByUserIdAndEventId(userId, eventId);
     }
@@ -174,18 +196,11 @@ public class EventService {
     }
 
     public List<Registration> getUserRegistrations(Long userId) {
-        return registrationRepository.findByUserId(userId);
-    }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
-    public List<Event> getPublicEvents() {
-        return eventRepository.findByStartAtAfter(LocalDateTime.now());
+        return registrationRepository.findRegistrationsByUserId(userId);
     }
-
-    public List<Event> getEventsRegistrationsByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return eventRepository.findEventsByRegistrations(user.getRegistrations());
-    }
-
     public List<Event> findEventsWithFilters(String search, Long locationId, Long tagId, String sortBy) {
         List<Event> events = eventRepository.findEventsWithFiltersRaw(search, locationId, tagId, sortBy);
 

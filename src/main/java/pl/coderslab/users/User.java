@@ -1,5 +1,6 @@
 package pl.coderslab.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +51,7 @@ public class User {
     private Set<Event> events = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     private Set<Registration> registrations = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

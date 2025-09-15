@@ -1,7 +1,10 @@
 package pl.coderslab.events.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 import lombok.Setter;
 import pl.coderslab.locations.Location;
 import pl.coderslab.tags.Tag;
@@ -12,29 +15,36 @@ import java.util.Set;
 
 public record CreateEventRequest(
         @NotBlank(message = "Title is required")
-        @Size(max = 80, message = "Title too long")
+        @Size(min = 5, max = 80, message = "Title must be between 5 - 80 characters")
         String title,
 
         @NotBlank(message = "Organizer is required")
-        @Size(max = 50, message = "Too long")
+        @Size(min = 5, max = 50, message = "Organizer must be between 5 - 80 characters")
         String organizer,
 
-        @NotBlank(message = "The date can't be past")
+        @NotNull(message = "Event date is required")
+        @Future(message = "Event date must be in the future")
         LocalDateTime startAt,
 
-        @NotBlank(message = "The date can't be future")
+        @NotNull(message = "Event date is required")
+        @Future(message = "Event date must be in the future")
         LocalDateTime endAt,
 
-        @NotBlank(message = "Amount of participants can't be bigger than capacity of location")
+        @NotNull(message = "Amount of participants can't be bigger than capacity of location")
         Integer capacity,
 
-        @NotBlank(message = " Choose location")
+        @NotNull(message = "Choose location")
         Location location,
 
-        @NotBlank(message = "User is needed")
+        @NotNull(message = "User is needed")
         User user,
 
-        @NotBlank(message = "At least one tag is required")
+        @NotNull(message = "At least one tag is required")
         Set<Tag>tags
 ) {
+    public void setTitle(String title) {}
+
+        public Object getEventDate() {
+                return startAt;
+        }
 }

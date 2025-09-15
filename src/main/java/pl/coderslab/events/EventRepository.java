@@ -24,28 +24,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @EntityGraph(attributePaths = {"location", "tags"})
     Optional<Event> findById(Long id);
 
-    public List<Event> findByOrganizer(String organizer);
-
-    public List<Event> findByStartAtAfter(LocalDateTime date);
+    List<Event> findByOrganizer(String organizer);
 
     List<Event> findByLocation(Location location);
-
-    public List<Event> findEventsByRegistrations(Set<Registration> registrations);
 
     @EntityGraph(attributePaths = {"location", "tags", "organizer"})
     List<Event> findByLocationCity(String city);
 
-    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.registrations")
-    List<Event> findAllWithRegistrations();
-
-    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.registrations WHERE e.id = :id")
-    Optional<Event> findByIdWithRegistrations(@Param("id") Long id);
+    @Query("SELECT r FROM Registration r JOIN FETCH r.event WHERE r.user.id = :userId")
+    List<Registration> findRegistrationsByUserId(@Param("userId") Long userId);
 
     @Query("SELECT DISTINCT e.location.city FROM Event e WHERE e.location.city IS NOT NULL ORDER BY e.location.city")
     List<String> findAllCities();
 
-    @Query("SELECT DISTINCT l.city FROM Location l WHERE l.city IS NOT NULL ORDER BY l.city")
-    List<String> findAllCitiesFromLocations();
 
     @Query("SELECT e FROM Event e " +
             "LEFT JOIN FETCH e.location l " +
@@ -66,4 +57,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             @Param("sortBy") String sortBy
     );
 
+    boolean existsByTitleAndStartAt(String title, LocalDateTime startAt);
 }
