@@ -1,0 +1,7 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###Post to register for an event
+POST localhost:8080/registrations/register?userId=2&eventId=6
+

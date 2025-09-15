@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytuj Event</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">Event App</a>
+
+        <div class="navbar-nav ms-auto">
+            <div sec:authorize="hasRole('ADMIN')" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Admin</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/admin/users">Users</a></li>
+                    <li><a class="dropdown-item" href="/admin/events">Events</a></li>
+                    <li><a class="dropdown-item" href="/admin/locations">Locations</a></li>
+                    <li><a class="dropdown-item" href="/admin/registrations">Registrations</a></li>
+                </ul>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container mt-4">
+    <h2>Edytuj Event</h2>
+
+    <!-- Error Messages -->
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/admin/events/{id}/edit(id=${eventId})}"
+                  th:object="${editEventRequest}"
+                  method="post">
+
+                <!-- Hidden ID -->
+                <input type="hidden" th:field="*{id}">
+
+                <!-- Title -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Tytuł *</label>
+                    <input type="text" class="form-control" th:field="*{title}" required>
+                </div>
+
+                <!-- Organizer -->
+                <div class="mb-3">
+                    <label for="organizer" class="form-label">Organizator</label>
+                    <input type="text" class="form-control" th:field="*{organizer}">
+                </div>
+
+                <!-- Capacity -->
+                <div class="mb-3">
+                    <label for="capacity" class="form-label">Pojemność</label>
+                    <input type="number" class="form-control" th:field="*{capacity}" min="1">
+                </div>
+
+                <!-- Start Date -->
+                <div class="mb-3">
+                    <label for="startAt" class="form-label">Data Rozpoczęcia *</label>
+                    <input type="datetime-local"
+                           class="form-control"
+                           name="startAt"
+                           th:value="${editEventRequest.startAt != null ? #temporals.format(editEventRequest.startAt, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                           required>
+                </div>
+
+                <!-- End Date -->
+                <div class="mb-3">
+                    <label for="endAt" class="form-label">Data Zakończenia *</label>
+                    <input type="datetime-local"
+                           class="form-control"
+                           name="endAt"
+                           th:value="${editEventRequest.endAt != null ? #temporals.format(editEventRequest.endAt, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                           required>
+                </div>
+
+                <!-- Location -->
+                <div class="mb-3">
+                    <label for="locationId" class="form-label">Lokalizacja *</label>
+                    <select class="form-select" th:field="*{locationId}" required>
+                        <option value="">Wybierz lokalizację</option>
+                        <option th:each="location : ${locations}"
+                                th:value="${location.id}"
+                                th:text="${location.name}"></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="userId" class="form-label">Zarządzający*</label>
+                    <select class="form-select" th:field="*{userId}" required>
+                        <option value="">Wybierz użytkownika</option>
+                        <option th:each="user : ${users}"
+                                th:value="${user.id}"
+                                th:text="${user.lastName()}"></option>
+                    </select>
+                </div>
+
+                <!-- Tags -->
+                <div class="mb-3" th:if="${tags != null}">
+                    <label class="form-label">Tagi</label>
+                    <div th:each="tag : ${tags}">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   th:field="*{tagIds}"
+                                   th:value="${tag.id}"
+                                   th:id="'tag_' + ${tag.id}">
+                            <label class="form-check-label"
+                                   th:for="'tag_' + ${tag.id}"
+                                   th:text="${tag.name}"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between">
+                    <a th:href="@{/admin/events}" class="btn btn-secondary">Anuluj</a>
+                    <button type="submit" class="btn btn-primary">Zapisz Zmiany</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

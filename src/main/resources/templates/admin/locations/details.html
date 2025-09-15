@@ -1,0 +1,129 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${location.name}">Location Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">Event App</a>
+
+        <div class="navbar-nav ms-auto">
+            <div sec:authorize="hasRole('ADMIN')" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Admin</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/admin/users">Users</a></li>
+                    <li><a class="dropdown-item" href="/admin/events">Events</a></li>
+                    <li><a class="dropdown-item" href="/admin/locations">Locations</a></li>
+                    <li><a class="dropdown-item" href="/admin/registrations">Registrations</a></li>
+                </ul>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" class="nav-item">
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1" th:text="${location.name}">Location Name</h1>
+            <span th:if="${location.isActive}" class="badge bg-success">Active</span>
+            <span th:unless="${location.isActive}" class="badge bg-secondary">Inactive</span>
+        </div>
+        <div>
+            <a href="/admin/locations" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left me-1"></i>Back to Locations
+            </a>
+            <a class="btn btn-primary" th:href="@{|/admin/locations/${location.id}/edit|}">
+                <i class="bi bi-pencil me-1"></i>Edit Location
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Location Info -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-info-circle me-2"></i>Location Information</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${location.address}" class="mb-3">
+                        <strong><i class="bi bi-geo-alt me-2"></i>Address:</strong>
+                        <p class="mb-0" th:text="${location.address}">Address</p>
+                    </div>
+
+                    <div th:if="${location.city}" class="mb-3">
+                        <strong><i class="bi bi-building me-2"></i>City:</strong>
+                        <p class="mb-0" th:text="${location.city}">City</p>
+                    </div>
+
+                    <div th:if="${location.capacity}" class="mb-3">
+                        <strong><i class="bi bi-people me-2"></i>Capacity:</strong>
+                        <p class="mb-0"><span th:text="${location.capacity}">100</span> people</p>
+                    </div>
+
+                    <div th:if="${location.description}" class="mb-3">
+                        <strong><i class="bi bi-card-text me-2"></i>Description:</strong>
+                        <p class="mb-0" th:text="${location.description}">Description</p>
+                    </div>
+
+                    <div th:if="${location.contactInfo}" class="mb-3">
+                        <strong><i class="bi bi-telephone me-2"></i>Contact:</strong>
+                        <p class="mb-0" th:text="${location.contactInfo}">Contact Info</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events at this location -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-calendar-event me-2"></i>Events at this Location
+                        <span class="badge bg-primary" th:text="${#sets.size(location.events)}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#sets.isEmpty(location.events)}" class="text-muted">
+                        <i class="bi bi-calendar-x me-2"></i>No events scheduled at this location.
+                    </div>
+
+                    <div th:if="${!#sets.isEmpty(location.events)}">
+                        <div th:each="event : ${location.events}" class="border-bottom pb-2 mb-2">
+                            <h6 class="mb-1">
+                                <a th:href="@{|/admin/events/${event.id}|}"
+                                   th:text="${event.title}"
+                                   class="text-decoration-none">Event Title</a>
+                            </h6>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>
+                                <span th:text="${#temporals.format(event.startAt, 'dd/MM/yyyy HH:mm')}">Date</span>
+                            </small>
+                            <br>
+                            <small class="text-muted" th:if="${event.organizer}">
+                                <i class="bi bi-person me-1"></i>
+                                <span th:text="${event.organizer}">Organizer</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

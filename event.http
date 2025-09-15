@@ -1,0 +1,65 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###POST request to server
+POST http://localhost:8080/event/add
+Content-Type: application/json
+
+{
+  "title": "Cybersecurity Essentials",
+  "organizer": "SecureTech",
+  "startAt": "2024-05-03T09:30:00",
+  "endAt": "2024-05-03T17:30:00",
+  "capacity": 80,
+  "location": {
+    "id": 15
+  },
+  "user": {
+    "id": 1
+  },
+  "tags": [
+    {"id": 2},
+    {"id": 9}
+  ]
+}
+###PUT request
+PUT localhost:8080/event/update/3
+Content-Type: application/json
+
+{
+  "title": "Spring Boot Masterclass",
+  "organizer": "Java Academy",
+  "startAt": "2024-05-10T09:00:00",
+  "endAt": "2024-05-10T17:00:00",
+  "capacity": 50,
+  "location": {
+    "id": 10
+  },
+  "user": {
+    "id": 3
+  },
+  "tags": [
+    {"id": 2},
+    {"id": 4}
+  ]
+}
+
+###Deleterequest
+DELETE localhost:8080/event/delete/4
+
+###
+// GET EVENTS BY LOCATION
+GET http://localhost:8080/event/locations/8
+
+###
+// GET EVENTS BY CITY
+GET http://localhost:8080/event/cities/Warszawa
+Accept: application/json
+
+###GET REGISTRATIONS
+GET http://localhost:8080/event/registrations/11
+
+###GET USERS REGISTRATIONS BY ID
+GET http://localhost:8080/event/registrations/1/
+Accept: application/json

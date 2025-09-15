@@ -1,0 +1,216 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Registrations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="">Event App</a>
+
+        <div class="navbar-nav ms-auto">
+            <div sec:authorize="hasRole('PARTICIPANT')" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Events</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/participant/events">Browse Events</a></li>
+                    <li><a class="dropdown-item" href="/participant/registrations">My Registrations</a></li>
+                </ul>
+            </div>
+
+            <div sec:authorize="isAuthenticated()" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    <i class="fas fa-user me-1"></i>
+                    <span th:text="${user.firstName}">User</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/participant/profile">
+                        <i class="fas fa-user-edit me-2"></i>My Profile
+                    </a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container py-4">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${successMessage}">Success message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${errorMessage}">Error message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${infoMessage}" class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <span th:text="${infoMessage}">Info message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-clipboard-list me-2"></i>My Registrations</h1>
+        <div>
+            <!-- Back to Events -->
+            <a href="/participant/events" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Events
+            </a>
+
+        </div>
+    </div>
+
+    <!-- No Registrations Message -->
+    <div th:if="${#lists.isEmpty(registrations)}" class="alert alert-info text-center">
+        <i class="fas fa-calendar-times fa-3x mb-3"></i>
+        <h4>No registrations found</h4>
+        <p>You haven't registered for any events yet.</p>
+        <a href="/participant/events" class="btn btn-primary">
+            <i class="fas fa-search me-1"></i>Browse Events
+        </a>
+    </div>
+
+    <!-- Registrations Table -->
+    <div th:if="${!#lists.isEmpty(registrations)}" class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>Your Event Registrations
+                <span class="badge bg-primary ms-2" th:text="${registrations.size()}">0</span>
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th><i class="fas fa-heading me-1"></i>Event</th>
+                        <th><i class="fas fa-calendar me-1"></i>Date & Time</th>
+                        <th><i class="fas fa-map-marker-alt me-1"></i>Location</th>
+                        <th><i class="fas fa-info-circle me-1"></i>Status</th>
+                        <th><i class="fas fa-clock me-1"></i>Registered At</th>
+                        <th><i class="fas fa-cogs me-1"></i>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="registration : ${registrations}">
+                        <!-- Event Info -->
+                        <td>
+                            <div>
+                                <strong th:text="${registration.event.title}">Event Title</strong>
+                                <br>
+                                <small class="text-muted" th:text="${registration.event.organizer}">Organizer</small>
+                            </div>
+                        </td>
+
+                        <!-- Date & Time -->
+                        <td>
+                            <div>
+                                <span th:text="${#temporals.format(registration.event.startAt, 'dd-MM-yyyy')}">Date</span>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <span th:text="${#temporals.format(registration.event.startAt, 'HH:mm')}">Time</span>
+                                    -
+                                    <span th:text="${#temporals.format(registration.event.endAt, 'HH:mm')}">End Time</span>
+                                </small>
+                            </div>
+                        </td>
+
+                        <!-- Location -->
+                        <td>
+                            <div th:if="${registration.event.location != null}">
+                                <strong th:text="${registration.event.location.name}">Location Name</strong>
+                                <br>
+                                <small class="text-muted" th:text="${registration.event.location.city}">City</small>
+                            </div>
+                            <span th:if="${registration.event.location == null}" class="text-muted">
+                                <i class="fas fa-question-circle me-1"></i>No location
+                            </span>
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                            <span th:switch="${registration.status.name()}">
+                                <span th:case="'CONFIRMED'" class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Confirmed
+                                </span>
+                                <span th:case="'CANCELLED'" class="badge bg-danger">
+                                    <i class="fas fa-times me-1"></i>Cancelled
+                                </span>
+                                <span th:case="'WAITLISTED'" class="badge bg-warning">
+                                    <i class="fas fa-clock me-1"></i>Waitlisted
+                                </span>
+                                <span th:case="*" class="badge bg-secondary">
+                                    <i class="fas fa-question me-1"></i>Unknown
+                                </span>
+                            </span>
+                        </td>
+
+                        <!-- Registered At -->
+                        <td>
+                            <small th:text="${#temporals.format(registration.registeredAt, 'dd-MM-yyyy HH:mm')}">
+                                Registration Date
+                            </small>
+                        </td>
+
+                        <!-- Actions -->
+                        <td>
+                            <div class="btn-group-vertical btn-group-sm" role="group">
+                                <!-- Event Details -->
+                                <a class="btn btn-outline-info btn-sm mb-1"
+                                   th:href="@{'/participant/events/' + ${registration.event.id}}"
+                                   title="View Event Details">
+                                    <i class="fas fa-eye me-1"></i>Details
+                                </a>
+
+                                <!-- Unregister Button (only for confirmed registrations) -->
+                                <form th:if="${registration.status.name() == 'CONFIRMED'}"
+                                      th:action="@{'/participant/events/' + ${registration.event.id} + '/unregister'}"
+                                      method="post"
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Are you sure you want to unregister from this event?')">
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm"
+                                            title="Unregister from this event">
+                                        <i class="fas fa-user-minus me-1"></i>Unregister
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Quick Actions -->
+        <div class="mt-4 text-center">
+            <a href="/participant/events" class="btn btn-primary me-2">
+                <i class="fas fa-search me-1"></i>Browse More Events
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+### POST request to add user
+POST http://localhost:8080/user/update
+
+{
+
+### Update User Email
+PUT http://localhost:8080/users/6/email
+Content-Type: application/json
+
+{
+  "email": "newemail@example.com"
+}
+###Deleting 5 user
+DELETE http://localhost:8080/users/delete/6
+
+### POST request to add user
+POST http://localhost:8080/users/add
+Content-Type: application/json
+
+{
+  "firstName": "Admin",
+  "lastName": "Adminowski",
+  "email": "admin@mail.com",
+  "password": "haslo",
+  "roleIds": [2]
+}
