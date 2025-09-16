@@ -14,8 +14,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByEventIdOrderByCreatedAtAsc(Long eventId);
 
-    List<Comment> findByEventIdOrderByCreatedAtDesc(Long eventId);
-
     Page<Comment> findByEventId(Long eventId, Pageable pageable);
 
     List<Comment> findByEventIdOrderByCreatedAtDesc(Long eventId, Pageable pageable);

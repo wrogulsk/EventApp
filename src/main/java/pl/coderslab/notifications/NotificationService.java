@@ -26,54 +26,46 @@ public class NotificationService {
     }
 
     public Notification createNotification(Long userId, String message, Long eventId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        System.out.println(">>> Creating notification for userId=" + userId + ", eventId=" + eventId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setMessage(message);
 
         if (eventId != null) {
-            Event event = eventRepository.findById(eventId)
-                    .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+            Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
             notification.setEvent(event);
         }
+        Notification saved = notificationRepository.save(notification);
+        System.out.println(">>> Saved notification ID=" + saved.getId());
 
-        return notificationRepository.save(notification);
+        return saved;
     }
 
-    // Powiadomienie bez eventu
-    public Notification createNotification(Long userId, String message) {
-        return createNotification(userId, message, null);
-    }
-
-    // Powiadomienia związane z rejestracją
+    // Registering notification
     public void notifyRegistrationConfirmed(Long userId, Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         String message = String.format("Zostałeś pomyślnie zarejestrowany na event: %s", event.getTitle());
         createNotification(userId, message, eventId);
     }
 
     public void notifyRegistrationCancelled(Long userId, Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         String message = String.format("Twoja rejestracja na event '%s' została anulowana", event.getTitle());
         createNotification(userId, message, eventId);
     }
 
-    // Powiadomienia o zmianach w evencie
+    // Changes in event
     public void notifyEventUpdated(Long eventId, String changeDescription) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        // Znajdź wszystkich zarejestrowanych użytkowników
+        // Find all registered users
         List<User> registeredUsers = notificationRepository.findRegisteredUsersForEvent(eventId);
 
-        String message = String.format("Event '%s' został zaktualizowany: %s",
-                event.getTitle(), changeDescription);
+        String message = String.format("Event '%s' został zaktualizowany: %s", event.getTitle(), changeDescription);
 
         for (User user : registeredUsers) {
             createNotification(user.getId(), message, eventId);
@@ -81,8 +73,7 @@ public class NotificationService {
     }
 
     public void notifyEventCancelled(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         List<User> registeredUsers = notificationRepository.findRegisteredUsersForEvent(eventId);
         String message = String.format("Event '%s' został odwołany", event.getTitle());
@@ -92,22 +83,19 @@ public class NotificationService {
         }
     }
 
-    // Przypomnienia
+    // Reminders
     public void sendEventReminder(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         List<User> registeredUsers = notificationRepository.findRegisteredUsersForEvent(eventId);
-        String message = String.format("Przypomnienie: Event '%s' rozpocznie się %s",
-                event.getTitle(),
-                event.getStartAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        String message = String.format("Przypomnienie: Event '%s' rozpocznie się %s", event.getTitle(), event.getStartAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
         for (User user : registeredUsers) {
             createNotification(user.getId(), message, eventId);
         }
     }
 
-    // Pobieranie powiadomień użytkownika
+    // Getting all notifications
     public List<Notification> getUserNotifications(Long userId) {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
@@ -116,12 +104,10 @@ public class NotificationService {
         return notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
     }
 
-    // Oznaczanie jako przeczytane
+    // Marking as read
     public void markAsRead(Long notificationId, Long userId) {
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new EntityNotFoundException("Notification not found"));
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new EntityNotFoundException("Notification not found"));
 
-        // Sprawdź czy powiadomienie należy do użytkownika
         if (!notification.getUser().getId().equals(userId)) {
             throw new SecurityException("Cannot access other user's notification");
         }
@@ -138,17 +124,15 @@ public class NotificationService {
         notificationRepository.saveAll(unreadNotifications);
     }
 
-    // Liczba nieprzeczytanych
+    // Unread notifications
     public long getUnreadCount(Long userId) {
         return notificationRepository.countByUserIdAndIsReadFalse(userId);
     }
 
-    // Usuwanie starych powiadomień
-    @Scheduled(cron = "0 0 2 * * ?") // Codziennie o 2:00
+    // Deleting old notifications
+    @Scheduled(cron = "0 0 2 * * ?") // Everyday at 2:00
     public void cleanupOldNotifications() {
         LocalDateTime cutoffDate = LocalDateTime.now().minusDays(30);
         notificationRepository.deleteByCreatedAtBeforeAndIsReadTrue(cutoffDate);
     }
-
-
 }

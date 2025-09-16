@@ -1,0 +1,53 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###GET all locations
+GET localhost:8080/locations
+
+###GET all location by ID
+GET localhost:8080/locations/2
+
+###GET locations by city
+GET localhost:8080/locations/search/city?city=Kraków
+
+###GET locations by name
+GET localhost:8080/locations/search/name?name=Atlas Arena
+
+###GET locations by capacity range
+GET http://localhost:8080/locations/capacity?minCapacity=50&maxCapacity=100
+
+###CREATE new location
+POST http://localhost:8080/locations
+Content-Type: application/json
+
+{
+  "name": "WOSIR Wyszków",
+  "address": "",
+  "city": "Wyszków",
+  "latitude": 47.7128,
+  "longitude": -30.0060,
+  "capacity": 500,
+  "description": "An enourmous hall.",
+  "contactInfo": "contact@wosir.com"
+}
+
+###UPDATE LOCATION PARAMETERS
+PUT http://localhost:8080/locations/21
+Content-Type: application/json
+
+{
+  "name": "WOSIR Wyszków",
+  "address": "ul. Sportowa 20",
+  "city": "Wyszków",
+  "latitude": 47.7128,
+  "longitude": -30.0060,
+  "capacity": 500,
+  "description": "An enourmous hall.",
+  "contactInfo": "contact@wosir.com"
+}
+
+###DELETE location by ID
+DELETE localhost:8080/locations/2
+
+

@@ -59,11 +59,6 @@ public class Location {
     @JsonIgnore
     private Set<Event> events = new HashSet<>();
 
-    public void addEvent(Event event) {
-        events.add(event);
-        event.setLocation(this);
-    }
-
     public boolean canAccommodate(Integer requiredCapacity) {
         return capacity == null || requiredCapacity == null || capacity >= requiredCapacity;
     }

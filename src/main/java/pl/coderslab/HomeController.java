@@ -14,10 +14,10 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
+//    @GetMapping("/dashboard")
+//    public String dashboard() {
+//        return "dashboard";
+//    }
 
     @GetMapping("/login")
     public String login() {

@@ -48,6 +48,7 @@ public class User {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     private Set<Event> events = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

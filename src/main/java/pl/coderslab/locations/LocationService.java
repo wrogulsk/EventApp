@@ -27,8 +27,7 @@ public class LocationService {
     }
 
     public Location getLocationById(Long id) {
-        return locationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Location not found with id: " + id));
+        return locationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Location not found with id: " + id));
     }
 
     public Location createLocation(Location location) {
@@ -106,31 +105,49 @@ public class LocationService {
         return locationRepository.findAvailableLocations(startTime, endTime, requiredCapacity);
     }
 
-    public long getEventCountForLocation(Long locationId) {
-        Location location = getLocationById(locationId);
-        return location.getEvents().size();
-    }
-
-    // Walidacja
+    // Validation
     private void validateLocation(Location location) {
         if (location.getName() == null || location.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Location name is required");
+        }
+
+        if (location.getName().length() > 100) {
+            throw new IllegalArgumentException("Location name cannot exceed 100 characters");
+        }
+
+        if (location.getAddress() != null && location.getAddress().length() > 100) {
+            throw new IllegalArgumentException("Address cannot exceed 100 characters");
+        }
+
+        if (location.getCity() != null && location.getCity().length() > 20) {
+            throw new IllegalArgumentException("City cannot exceed 20 characters");
         }
 
         if (location.getCapacity() != null && location.getCapacity() < 1) {
             throw new IllegalArgumentException("Capacity must be greater than 0");
         }
 
-        if (location.getLatitude() != null &&
-                (location.getLatitude().compareTo(new BigDecimal("-90")) < 0 ||
-                        location.getLatitude().compareTo(new BigDecimal("90")) > 0)) {
+        if (location.getLatitude() != null && (location.getLatitude().compareTo(new BigDecimal("-90")) < 0 || location.getLatitude().compareTo(new BigDecimal("90")) > 0)) {
             throw new IllegalArgumentException("Latitude must be between -90 and 90");
         }
 
-        if (location.getLongitude() != null &&
-                (location.getLongitude().compareTo(new BigDecimal("-180")) < 0 ||
-                        location.getLongitude().compareTo(new BigDecimal("180")) > 0)) {
+        if (location.getLongitude() != null && (location.getLongitude().compareTo(new BigDecimal("-180")) < 0 || location.getLongitude().compareTo(new BigDecimal("180")) > 0)) {
             throw new IllegalArgumentException("Longitude must be between -180 and 180");
+        }
+
+        if (location.getDescription() != null && location.getDescription().length() > 1000) {
+            throw new IllegalArgumentException("Description cannot exceed 1000 characters");
+        }
+
+        if (location.getContactInfo() != null) {
+            if (location.getContactInfo().length() > 255) {
+                throw new IllegalArgumentException("Contact info cannot exceed 255 characters");
+            }
+
+            if (location.getContactInfo().contains("@") &&
+                    !location.getContactInfo().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                throw new IllegalArgumentException("Invalid email format for contact info");
+            }
         }
     }
 

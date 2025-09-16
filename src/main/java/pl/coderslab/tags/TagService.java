@@ -35,4 +35,8 @@ public class TagService {
         List<Tag> tagList = tagRepository.findAllById(tagIds);
         return new HashSet<>(tagList);
     }
+
+    public Tag createTag(Tag tag) {
+        return tagRepository.save(tag);
+    }
 }

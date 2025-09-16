@@ -34,5 +34,5 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    private Event event; // So comments can be tied to specific events
+    private Event event;
 }

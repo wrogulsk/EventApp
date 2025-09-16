@@ -19,6 +19,19 @@ public class RegistrationController {
         this.eventService = eventService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Registration>> getRegistrations() {
+        List<Registration> registrations = registrationService.getAllRegistrations();
+
+        registrations.forEach(registration -> {
+            registration.getUser().getLastName();
+            registration.getEvent().getTitle();
+        });
+
+        return ResponseEntity.ok(registrations);
+
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerForEvent(
             @RequestParam Long userId,

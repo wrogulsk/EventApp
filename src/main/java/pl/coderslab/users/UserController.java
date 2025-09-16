@@ -74,12 +74,11 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        if(id == null) {
+        if (id == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
-
 }
 

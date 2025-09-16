@@ -36,7 +36,8 @@ public class CommentService {
         this.userRepository = userRepository;
         this.notificationService = notificationService;
     }
-    // Tworzenie komentarza
+
+    // Creating
     public Comment createComment(Long eventId, Long authorId, String content) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
@@ -53,7 +54,6 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        // Powiadom organizatora eventu o nowym komentarzu (jeśli to nie on sam)
         if (!event.getUser().getId().equals(authorId)) {
             String message = String.format("Nowy komentarz do Twojego eventu '%s' od %s",
                     event.getTitle(), author.getFirstName());
@@ -63,12 +63,11 @@ public class CommentService {
         return savedComment;
     }
 
-    // Aktualizacja komentarza
+    // Updating
     public Comment updateComment(Long commentId, Long authorId, String newContent) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
-        // Sprawdź czy użytkownik może edytować komentarz
         if (!comment.getAuthor().getId().equals(authorId)) {
             throw new SecurityException("You can only edit your own comments");
         }
@@ -79,12 +78,11 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    // Usuwanie komentarza
+    // Deleting
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
-        // Sprawdź czy użytkownik może usunąć komentarz (autor lub organizator eventu)
         boolean isAuthor = comment.getAuthor().getId().equals(userId);
         boolean isEventOrganizer = comment.getEvent().getUser().getId().equals(userId);
 
@@ -95,21 +93,12 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    // Pobieranie komentarzy
+    // Getting comments
     public List<Comment> getCommentsForEvent(Long eventId) {
         eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         return commentRepository.findByEventIdOrderByCreatedAtAsc(eventId);
-    }
-
-    public List<Comment> getCommentsForEventPaginated(Long eventId, int page, int size) {
-        eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Comment> commentsPage = commentRepository.findByEventId(eventId, pageable);
-        return commentsPage.getContent();
     }
 
     public List<Comment> getCommentsByAuthor(Long authorId) {
@@ -124,7 +113,7 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
     }
 
-    // Wyszukiwanie komentarzy
+    // Searching for comments
     public List<Comment> searchComments(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return new ArrayList<>();
@@ -141,7 +130,7 @@ public class CommentService {
         return commentRepository.findByEventIdAndContentContainingIgnoreCaseOrderByCreatedAtDesc(eventId, keyword.trim());
     }
 
-    // Statystyki
+    // Stats
     public long getCommentCountForEvent(Long eventId) {
         return commentRepository.countByEventId(eventId);
     }
@@ -160,29 +149,7 @@ public class CommentService {
         return commentRepository.findByEventIdOrderByCreatedAtDesc(eventId, pageable);
     }
 
-    // Moderacja
-    public List<Comment> getCommentsForModeration(Long organizerId) {
-        // Pobierz komentarze z eventów organizowanych przez danego użytkownika
-        return commentRepository.findCommentsFromUserEvents(organizerId);
-    }
-
-    public void moderateComment(Long commentId, Long moderatorId, String reason) {
-        Comment comment = getCommentById(commentId);
-
-        // Sprawdź czy moderator może moderować ten komentarz (organizator eventu)
-        if (!comment.getEvent().getUser().getId().equals(moderatorId)) {
-            throw new SecurityException("You can only moderate comments from your events");
-        }
-
-        // Powiadom autora komentarza o moderacji
-        String message = String.format("Twój komentarz do eventu '%s' został usunięty. Powód: %s",
-                comment.getEvent().getTitle(), reason);
-        notificationService.createNotification(comment.getAuthor().getId(), message, comment.getEvent().getId());
-
-        commentRepository.delete(comment);
-    }
-
-    // Walidacja
+    // Validation
     private void validateCommentContent(String content) {
         if (content == null || content.trim().isEmpty()) {
             throw new IllegalArgumentException("Comment content cannot be empty");
@@ -196,8 +163,8 @@ public class CommentService {
             throw new IllegalArgumentException("Comment cannot exceed 1000 characters");
         }
 
-        // Podstawowa filtracja wulgaryzmów (można rozszerzyć)
-        String[] bannedWords = {"spam", "fake", "scam"}; // przykład
+        // Basic filtration of Bad Words - could be extended
+        String[] bannedWords = {"spam", "fake", "scam"};
         String lowerContent = content.toLowerCase();
         for (String word : bannedWords) {
             if (lowerContent.contains(word)) {
@@ -206,10 +173,10 @@ public class CommentService {
         }
     }
 
-    // Automatyczne czyszczenie starych komentarzy (opcjonalne)
-    @Scheduled(cron = "0 0 3 * * ?") // Codziennie o 3:00
+    // Automatic deleting of old comments(optional))
+    @Scheduled(cron = "0 0 3 * * ?") // Everyday at 3:00
     public void cleanupOldComments() {
-        LocalDateTime cutoffDate = LocalDateTime.now().minusMonths(12); // 12 miesięcy
+        LocalDateTime cutoffDate = LocalDateTime.now().minusMonths(6); // 6 months
         List<Comment> oldComments = commentRepository.findByCreatedAtBefore(cutoffDate);
 
         if (!oldComments.isEmpty()) {

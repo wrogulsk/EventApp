@@ -155,7 +155,6 @@ public class EventService {
 
     }
 
-
     public void deleteEvent(Long id) {
         Event event = eventRepository.findById(id).orElse(null);
         if (event == null) {
@@ -201,10 +200,11 @@ public class EventService {
 
         return registrationRepository.findRegistrationsByUserId(userId);
     }
+
     public List<Event> findEventsWithFilters(String search, Long locationId, Long tagId, String sortBy) {
         List<Event> events = eventRepository.findEventsWithFiltersRaw(search, locationId, tagId, sortBy);
 
-        // USUWA DUPLIKATY ZACHOWUJĄC KOLEJNOŚC
+        // Deletes duplicates with sorting
         return new ArrayList<>(events.stream()
                 .collect(Collectors.toMap(
                         Event::getId,

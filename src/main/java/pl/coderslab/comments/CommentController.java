@@ -2,11 +2,14 @@ package pl.coderslab.comments;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+@RestController
+@RequestMapping("/comments")
 public class CommentController {
 
     private final CommentService commentService;
@@ -15,7 +18,45 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping
+    @GetMapping("/{id}")
+    public ResponseEntity<CommentResponse> getComment(@PathVariable Long id) {
+        Comment comment = commentService.getCommentById(id);
+        return ResponseEntity.ok(CommentResponse.fromEntity(comment));
+    }
+
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<List<CommentResponse>> getCommentsForEvent(@PathVariable Long eventId) {
+        List<Comment> comments = commentService.getCommentsForEvent(eventId);
+        List<CommentResponse> responses = comments.stream()
+                .map(CommentResponse::fromEntity)
+                .toList();
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<CommentResponse>> getCommentsByAuthor(@PathVariable Long authorId) {
+        List<Comment> comments = commentService.getCommentsByAuthor(authorId);
+        List<CommentResponse> responses = comments.stream()
+                .map(CommentResponse::fromEntity)
+                .toList();
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/event/{eventId}/search")
+    public ResponseEntity<List<CommentResponse>> searchCommentsInEvent(
+            @PathVariable Long eventId,
+            @RequestParam String keyword) {
+        List<Comment> comments = commentService.searchCommentsInEvent(eventId, keyword);
+
+        List<CommentResponse> responseList = comments.stream()
+                .map(CommentResponse::fromEntity)
+                .toList();
+
+        return ResponseEntity.ok(responseList);
+    }
+
+
+    @PostMapping("/add")
     public ResponseEntity<Comment> createComment(
             @RequestParam Long eventId,
             @RequestParam Long authorId,
@@ -43,44 +84,10 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Comment> getComment(@PathVariable Long id) {
-        Comment comment = commentService.getCommentById(id);
-        return ResponseEntity.ok(comment);
-    }
-
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<List<Comment>> getCommentsForEvent(@PathVariable Long eventId) {
-        List<Comment> comments = commentService.getCommentsForEvent(eventId);
-        return ResponseEntity.ok(comments);
-    }
-
-    @GetMapping("/event/{eventId}/paginated")
-    public ResponseEntity<List<Comment>> getCommentsForEventPaginated(
-            @PathVariable Long eventId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        List<Comment> comments = commentService.getCommentsForEventPaginated(eventId, page, size);
-        return ResponseEntity.ok(comments);
-    }
-
-    @GetMapping("/author/{authorId}")
-    public ResponseEntity<List<Comment>> getCommentsByAuthor(@PathVariable Long authorId) {
-        List<Comment> comments = commentService.getCommentsByAuthor(authorId);
-        return ResponseEntity.ok(comments);
-    }
-
+    //UNUSED GET
     @GetMapping("/search")
     public ResponseEntity<List<Comment>> searchComments(@RequestParam String keyword) {
         List<Comment> comments = commentService.searchComments(keyword);
-        return ResponseEntity.ok(comments);
-    }
-
-    @GetMapping("/event/{eventId}/search")
-    public ResponseEntity<List<Comment>> searchCommentsInEvent(
-            @PathVariable Long eventId,
-            @RequestParam String keyword) {
-        List<Comment> comments = commentService.searchCommentsInEvent(eventId, keyword);
         return ResponseEntity.ok(comments);
     }
 
@@ -104,18 +111,4 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/moderation/{organizerId}")
-    public ResponseEntity<List<Comment>> getCommentsForModeration(@PathVariable Long organizerId) {
-        List<Comment> comments = commentService.getCommentsForModeration(organizerId);
-        return ResponseEntity.ok(comments);
-    }
-
-    @DeleteMapping("/{id}/moderate")
-    public ResponseEntity<Void> moderateComment(
-            @PathVariable Long id,
-            @RequestParam Long moderatorId,
-            @RequestParam String reason) {
-        commentService.moderateComment(id, moderatorId, reason);
-        return ResponseEntity.noContent().build();
-    }
 }

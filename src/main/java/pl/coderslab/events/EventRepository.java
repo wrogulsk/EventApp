@@ -31,12 +31,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @EntityGraph(attributePaths = {"location", "tags", "organizer"})
     List<Event> findByLocationCity(String city);
 
-    @Query("SELECT r FROM Registration r JOIN FETCH r.event WHERE r.user.id = :userId")
-    List<Registration> findRegistrationsByUserId(@Param("userId") Long userId);
-
     @Query("SELECT DISTINCT e.location.city FROM Event e WHERE e.location.city IS NOT NULL ORDER BY e.location.city")
     List<String> findAllCities();
-
 
     @Query("SELECT e FROM Event e " +
             "LEFT JOIN FETCH e.location l " +

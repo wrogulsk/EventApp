@@ -2,6 +2,10 @@
 GET https://examples.http-client.intellij.net/get
     ?generated-in=IntelliJ IDEA
 
+### GET all registrations
+GET localhost:8080/registrations
+
+
 ###Post to register for an event
-POST localhost:8080/registrations/register?userId=2&eventId=6
+POST localhost:8080/registrations/register?userId=17&eventId=6
 

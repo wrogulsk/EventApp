@@ -12,7 +12,7 @@ import pl.coderslab.users.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="registrations")
+@Table(name = "registrations")
 @Setter
 @Getter
 @NoArgsConstructor
