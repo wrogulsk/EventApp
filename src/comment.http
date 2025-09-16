@@ -3,11 +3,11 @@ GET https://examples.http-client.intellij.net/get
     ?generated-in=IntelliJ IDEA
 
 ### POST request to create a comment
-POST http://localhost:8080/comments/add?eventId=3&authorId=20
+POST http://localhost:8080/comments/add?eventId=5&authorId=20
 Content-Type: application/json
 
 {
-  "content": "I am the one one but can't wait!"
+  "content": "Let's roll!!"
 }
 
 ### GET comment by ID

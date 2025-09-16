@@ -19,9 +19,7 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    public RegistrationService(RegistrationRepository registrationRepository,
-                               EventRepository eventRepository,
-                               UserRepository userRepository, NotificationService notificationService) {
+    public RegistrationService(RegistrationRepository registrationRepository, EventRepository eventRepository, UserRepository userRepository, NotificationService notificationService) {
         this.registrationRepository = registrationRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -32,66 +30,41 @@ public class RegistrationService {
         return registrationRepository.findAll();
     }
 
-    @Transactional
+
     public void registerUserForEvent(Long userId, Long eventId) {
-        System.out.println(">>> [DEBUG] Starting registerUserForEvent for userId=" + userId + ", eventId=" + eventId);
 
-        // Load participant
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        System.out.println(">>> [DEBUG] Found participant: " + user.getEmail());
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // Load event
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
-        System.out.println(">>> [DEBUG] Found event: " + event.getTitle());
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        // Check if already registered
         if (registrationRepository.existsByUserAndEvent(user, event)) {
             throw new IllegalStateException("User already registered for this event");
         }
 
-        // Check if event is full
         long currentRegistrations = registrationRepository.countByEventAndStatus(event, RegistrationStatus.CONFIRMED);
         if (currentRegistrations >= event.getCapacity()) {
             throw new IllegalStateException("Event is full");
         }
 
-        // Create and save registration
         Registration registration = new Registration();
         registration.setUser(user);
         registration.setEvent(event);
         registration.setStatus(RegistrationStatus.CONFIRMED);
-        registrationRepository.save(registration);
-        System.out.println(">>> [DEBUG] Registration saved for userId=" + userId);
 
-        // Always notify participant
-        String participantMessage = String.format(
-                "Zostałeś pomyślnie zarejestrowany na event: %s", event.getTitle()
-        );
+        String participantMessage = String.format("Zostałeś pomyślnie zarejestrowany na event: %s", event.getTitle());
         notificationService.createNotification(userId, participantMessage, eventId);
-        System.out.println(">>> [DEBUG] Notification sent to participant");
 
-        // Notify organizer if different from participant
         Long organizerId = event.getUser().getId();
         if (!organizerId.equals(userId)) {
-            String organizerMessage = String.format(
-                    "Nowy uczestnik %s %s zapisał się na Twój event: %s",
-                    user.getFirstName(),
-                    user.getLastName(),
-                    event.getTitle()
-            );
+            String organizerMessage = String.format("Nowy uczestnik %s %s zapisał się na Twój event: %s", user.getFirstName(), user.getLastName(), event.getTitle());
             notificationService.createNotification(organizerId, organizerMessage, eventId);
-            System.out.println(">>> [DEBUG] Notification sent to organizer");
         }
-
-        System.out.println(">>> [DEBUG] registerUserForEvent completed successfully");
+        registrationRepository.save(registration);
     }
 
     @Transactional
     public void cancelRegistration(Long registrationId, Long userId) {
-        Registration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new EntityNotFoundException("Registration not found"));
+        Registration registration = registrationRepository.findById(registrationId).orElseThrow(() -> new EntityNotFoundException("Registration not found"));
 
         if (!registration.getUser().getId().equals(userId)) {
             throw new SecurityException("Cannot cancel other user's registration");
@@ -100,6 +73,10 @@ public class RegistrationService {
         registration.setStatus(RegistrationStatus.CANCELLED);
         notificationService.notifyRegistrationCancelled(userId, registration.getEvent().getId());
         registrationRepository.save(registration);
+    }
+
+    public void deleteRegistration(Long registrationId) {
+        registrationRepository.deleteById(registrationId);
     }
 
     public List<Registration> getUserRegistrations(Long userId) {
@@ -111,21 +88,18 @@ public class RegistrationService {
     }
 
     public boolean isUserRegistered(Long userId, Long eventId) {
-        return registrationRepository.existsByUserIdAndEventIdAndStatus(
-                userId, eventId, RegistrationStatus.CONFIRMED);
+        return registrationRepository.existsByUserIdAndEventIdAndStatus(userId, eventId, RegistrationStatus.CONFIRMED);
     }
 
     public int getAvailableSpots(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         long confirmedRegistrations = registrationRepository.countByEventAndStatus(event, RegistrationStatus.CONFIRMED);
         return Math.max(0, event.getCapacity() - (int) confirmedRegistrations);
     }
 
     public void unregisterUserFromEvent(Long userId, Long eventId) {
-        Optional<Registration> registration = registrationRepository
-                .findByEventIdAndUserId(eventId, userId);
+        Optional<Registration> registration = registrationRepository.findByEventIdAndUserId(eventId, userId);
 
         if (registration.isPresent()) {
             registrationRepository.delete(registration.get());

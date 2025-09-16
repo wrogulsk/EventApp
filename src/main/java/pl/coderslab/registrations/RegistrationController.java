@@ -20,13 +20,19 @@ public class RegistrationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Registration>> getRegistrations() {
-        List<Registration> registrations = registrationService.getAllRegistrations();
-
-        registrations.forEach(registration -> {
-            registration.getUser().getLastName();
-            registration.getEvent().getTitle();
-        });
+    public ResponseEntity<List<RegistrationDTO>> getRegistrations() {
+        List<RegistrationDTO> registrations = registrationService.getAllRegistrations().stream()
+                .map(reg -> new RegistrationDTO(
+                        reg.getId(),
+                        reg.getStatus().name(),
+                        reg.getRegisteredAt(),
+                        reg.getUser().getId(),
+                        reg.getUser().getFirstName(),
+                        reg.getUser().getLastName(),
+                        reg.getEvent().getId(),
+                        reg.getEvent().getTitle()
+                ))
+                .toList();
 
         return ResponseEntity.ok(registrations);
 
@@ -37,8 +43,8 @@ public class RegistrationController {
             @RequestParam Long userId,
             @RequestParam Long eventId) {
         try {
-            Registration registration = eventService.registerUserForEvent(userId, eventId);
-            return ResponseEntity.ok(registration);
+            registrationService.registerUserForEvent(userId, eventId);
+            return ResponseEntity.ok("Registration successful");
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -52,9 +58,23 @@ public class RegistrationController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Void> deleteRegistration(@PathVariable Long id) {
+        registrationService.deleteRegistration(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Registration>> getUserRegistrations(@PathVariable Long userId) {
-        List<Registration> registrations = registrationService.getUserRegistrations(userId);
+    public ResponseEntity<List<RegistrationUserDto>> getUserRegistrations(@PathVariable Long userId) {
+        List<RegistrationUserDto> registrations = registrationService.getUserRegistrations(userId).stream()
+                .map(registration -> new RegistrationUserDto(
+                        registration.getId(),
+                        registration.getStatus().name(),
+                        registration.getRegisteredAt(),
+                        registration.getEvent().getId(),
+                        registration.getEvent().getTitle()
+                ))
+                .toList();
         return ResponseEntity.ok(registrations);
     }
 

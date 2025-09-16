@@ -5,7 +5,15 @@ GET https://examples.http-client.intellij.net/get
 ### GET all registrations
 GET localhost:8080/registrations
 
+### GET User registration by ID
+GET localhost:8080/registrations/user/14
 
 ###Post to register for an event
-POST localhost:8080/registrations/register?userId=17&eventId=6
+POST localhost:8080/registrations/register?userId=4&eventId=6
+
+###Cancel registration
+DELETE http://localhost:8080/registrations/37/cancel?userId=17
+
+###DELETE entirely registration
+DELETE http://localhost:8080/registrations/36/delete
 
