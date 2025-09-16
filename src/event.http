@@ -64,6 +64,6 @@ Content-Type: application/json
   ]
 }
 
-###Deleterequest
+###DELETE request
 DELETE localhost:8080/events/delete/15
 

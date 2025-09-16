@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
-//@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final UserService userService;

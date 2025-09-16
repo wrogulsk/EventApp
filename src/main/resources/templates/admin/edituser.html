@@ -47,7 +47,8 @@
                         <span th:text="${errorMessage}"></span>
                     </div>
 
-                    <form th:action="@{/admin/users/{id}/edit(id=${userId})}" th:object="${editUserRequest}" method="post">
+                    <form th:action="@{/admin/users/{id}/edit(id=${userId})}" th:object="${editUserRequest}"
+                          method="post">
 
                         <!-- Hidden ID field -->
                         <input type="hidden" th:field="*{id}">
@@ -140,7 +141,7 @@
 
 <!-- Optional: Add some JavaScript for better UX -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Focus on first input
         document.getElementById('firstName').focus();
 
@@ -153,7 +154,7 @@
             input.addEventListener('change', () => formChanged = true);
         });
 
-        window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', function (e) {
             if (formChanged) {
                 e.preventDefault();
                 e.returnValue = '';

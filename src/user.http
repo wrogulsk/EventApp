@@ -24,7 +24,7 @@ Content-Type: application/json
   "roleIds": [1]
 }
 
-### Update User via ID
+### UPDATE User via ID
 PUT http://localhost:8080/users/edit/19
 Content-Type: application/json
 
@@ -36,7 +36,7 @@ Content-Type: application/json
   "roleIds": [1, 2]
 }
 
-### Update User Email
+### UPDATE User Email
 PUT http://localhost:8080/users/20/email
 Content-Type: application/json
 
@@ -44,5 +44,5 @@ Content-Type: application/json
   "email": "newemail@example.com"
 }
 
-###DELETING
+###DELETE
 DELETE http://localhost:8080/users/delete/19

@@ -44,7 +44,8 @@
                     <!-- Search/Filter Bar -->
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" id="searchInput" placeholder="Search by user name or event title...">
+                            <input type="text" class="form-control" id="searchInput"
+                                   placeholder="Search by user name or event title...">
                         </div>
                         <div class="col-md-3">
                             <select class="form-select" id="statusFilter">
@@ -76,7 +77,8 @@
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-user-circle me-2 text-primary"></i>
                                         <div>
-                                            <strong th:text="${registration.user.firstName + ' ' + registration.user.lastName}">John Doe</strong>
+                                            <strong th:text="${registration.user.firstName + ' ' + registration.user.lastName}">John
+                                                Doe</strong>
                                             <br>
                                             <small class="text-muted" th:text="${registration.user.email}">john.doe@example.com</small>
                                         </div>
@@ -88,11 +90,15 @@
                                         <div>
                                             <strong th:text="${registration.event.title}">Spring Boot Workshop</strong>
                                             <br>
-                                            <small class="text-muted" th:text="${#temporals.format(registration.event.startAt, 'dd-MM-yyyy HH:mm')}">05-04-2024 10:00</small>
+                                            <small class="text-muted"
+                                                   th:text="${#temporals.format(registration.event.startAt, 'dd-MM-yyyy HH:mm')}">05-04-2024
+                                                10:00</small>
                                         </div>
                                     </div>
                                 </td>
-                                <td th:text="${#temporals.format(registration.registeredAt, 'dd-MM-yyyy HH:mm')}">01-04-2024 14:30</td>
+                                <td th:text="${#temporals.format(registration.registeredAt, 'dd-MM-yyyy HH:mm')}">
+                                    01-04-2024 14:30
+                                </td>
                                 <td>
                                             <span class="badge"
                                                   th:classappend="${registration.status == 'CONFIRMED'} ? 'bg-success' :
@@ -109,7 +115,8 @@
 
                                             <input type="hidden" name="_method" value="DELETE">
 
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Cancel Registration">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                    title="Cancel Registration">
                                                 <i class="fas fa-times"></i>
                                             </button>
                                         </form>
@@ -138,7 +145,7 @@
 <!-- Custom JavaScript -->
 <script>
     // Search functionality
-    document.getElementById('searchInput').addEventListener('keyup', function() {
+    document.getElementById('searchInput').addEventListener('keyup', function () {
         const searchValue = this.value.toLowerCase();
         const tableRows = document.querySelectorAll('tbody tr');
 
@@ -155,7 +162,7 @@
     });
 
     // Status filter
-    document.getElementById('statusFilter').addEventListener('change', function() {
+    document.getElementById('statusFilter').addEventListener('change', function () {
         const filterValue = this.value;
         const tableRows = document.querySelectorAll('tbody tr');
 

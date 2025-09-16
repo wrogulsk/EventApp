@@ -124,7 +124,6 @@ public class ParticipantController {
     }
 
 
-
     @PostMapping("/events/{id}/register")
     public String registerForEvent(@PathVariable Long id, Authentication auth, RedirectAttributes redirectAttributes) {
 

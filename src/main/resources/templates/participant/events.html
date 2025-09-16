@@ -135,11 +135,21 @@
                             <i class="fas fa-sort me-1"></i>Sort By
                         </label>
                         <select class="form-select" id="sortBy" name="sortBy">
-                            <option value="startAt" th:selected="${param.sortBy == null or param.sortBy[0] == 'startAt'}">Start Date</option>
-                            <option value="title" th:selected="${param.sortBy != null and param.sortBy[0] == 'title'}">Title (A-Z)</option>
-                            <option value="organizer" th:selected="${param.sortBy != null and param.sortBy[0] == 'organizer'}">Organizer</option>
-                            <option value="capacity" th:selected="${param.sortBy != null and param.sortBy[0] == 'capacity'}">Capacity</option>
-                            <option value="location" th:selected="${param.sortBy != null and param.sortBy[0] == 'location'}">Location</option>
+                            <option value="startAt"
+                                    th:selected="${param.sortBy == null or param.sortBy[0] == 'startAt'}">Start Date
+                            </option>
+                            <option value="title" th:selected="${param.sortBy != null and param.sortBy[0] == 'title'}">
+                                Title (A-Z)
+                            </option>
+                            <option value="organizer"
+                                    th:selected="${param.sortBy != null and param.sortBy[0] == 'organizer'}">Organizer
+                            </option>
+                            <option value="capacity"
+                                    th:selected="${param.sortBy != null and param.sortBy[0] == 'capacity'}">Capacity
+                            </option>
+                            <option value="location"
+                                    th:selected="${param.sortBy != null and param.sortBy[0] == 'location'}">Location
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -203,8 +213,10 @@
                             <a th:href="@{/participant/events(sortBy='title', search=${param.search}, locationId=${param.locationId}, tagId=${param.tagId})}"
                                class="text-white text-decoration-none">
                                 <i class="fas fa-heading me-1"></i>Title
-                                <i class="fas fa-sort" th:if="${param.sortBy == null or param.sortBy[0] != 'title'}"></i>
-                                <i class="fas fa-sort-up" th:if="${param.sortBy != null and param.sortBy[0] == 'title'}"></i>
+                                <i class="fas fa-sort"
+                                   th:if="${param.sortBy == null or param.sortBy[0] != 'title'}"></i>
+                                <i class="fas fa-sort-up"
+                                   th:if="${param.sortBy != null and param.sortBy[0] == 'title'}"></i>
                             </a>
                         </th>
                         <th><i class="fas fa-user-tie me-1"></i>Organizer</th>
@@ -220,8 +232,10 @@
                             <a th:href="@{/participant/events(sortBy='location', search=${param.search}, locationId=${param.locationId}, tagId=${param.tagId})}"
                                class="text-white text-decoration-none">
                                 <i class="fas fa-map-marker-alt me-1"></i>Location
-                                <i class="fas fa-sort" th:if="${param.sortBy == null or param.sortBy[0] != 'location'}"></i>
-                                <i class="fas fa-sort-up" th:if="${param.sortBy != null and param.sortBy[0] == 'location'}"></i>
+                                <i class="fas fa-sort"
+                                   th:if="${param.sortBy == null or param.sortBy[0] != 'location'}"></i>
+                                <i class="fas fa-sort-up"
+                                   th:if="${param.sortBy != null and param.sortBy[0] == 'location'}"></i>
                             </a>
                         </th>
                         <th><i class="fas fa-tags me-1"></i>Tags</th>

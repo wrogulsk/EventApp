@@ -73,7 +73,7 @@
                 <td>
                     <span th:if="${#sets.isEmpty(e.tags)}" class="text-muted">No tags</span>
                     <span th:if="${!#sets.isEmpty(e.tags)}">
-                        <span th:each="tag, iterStat : ${e.tags}" class="badge bg-secondary me-1"  th:text="${tag.name}">Tag</span>
+                        <span th:each="tag, iterStat : ${e.tags}" class="badge bg-secondary me-1" th:text="${tag.name}">Tag</span>
                     </span>
                 </td>
                 <td>

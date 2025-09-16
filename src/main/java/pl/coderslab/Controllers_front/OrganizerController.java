@@ -33,21 +33,23 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/organizer")
-//@PreAuthorize("hasRole('ORGANIZER')")
 public class OrganizerController {
 
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RegistrationService registrationService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private LocationService locationService;
-    @Autowired
-    private RegistrationRepository registrationRepository;
+    private final EventService eventService;
+    private final UserService userService;
+    private final RegistrationService registrationService;
+    private final TagService tagService;
+    private final LocationService locationService;
+    private final RegistrationRepository registrationRepository;
+
+    public OrganizerController(EventService eventService, UserService userService, RegistrationService registrationService, TagService tagService, LocationService locationService, RegistrationRepository registrationRepository) {
+        this.eventService = eventService;
+        this.userService = userService;
+        this.registrationService = registrationService;
+        this.tagService = tagService;
+        this.locationService = locationService;
+        this.registrationRepository = registrationRepository;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication auth) {
