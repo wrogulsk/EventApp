@@ -37,36 +37,40 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf
-//                        .ignoringRequestMatchers("/users/add") // ← Wyłącz CSRF dla tego endpointu
-//                )
-                //TO WYRZUCIC ZEBY PONOWNIE DZIAŁAŁO LOGOWANIR
-                .authorizeHttpRequests(authz -> authz
-                                .anyRequest().permitAll() // Wszystkie endpointy publiczne
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/users/add") // ← Disable CSRF for such endpoint
                 )
-                .csrf(csrf -> csrf.disable()) // Wyłącz CSRF dla testów API
-                .formLogin(form -> form.disable()) // Wyłącz formularz logowania
-                .httpBasic(basic -> basic.disable()); //Wylacz Basic Auth
+                .authorizeHttpRequests(authz -> authz
 
 
-//                        .requestMatchers("/", "/login", "/register", "/events/public/**", "/ui/events", "/users/add").permitAll()
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/organizer/**").hasRole("ORGANIZER")
-//                        .requestMatchers("/participant/**").hasRole("PARTICIPANT")
-//                        .anyRequest().authenticated()
+
+                        //PART OF CODE WHICH HAS TO BE UNCOMMENTED WHEN YOU NEED TO CHECK HTTP ENDPOINTS
+//                        .authorizeHttpRequests(authz -> authz
+//                                .anyRequest().permitAll() // ALL endpoints public
 //                )
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .usernameParameter("email") // ← Tell Spring to use 'email' parameter
-//                        .passwordParameter("password")
-//                        .successHandler(customAuthenticationSuccessHandler())
-//                        .failureUrl("/login?error=true")
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutSuccessUrl("/")
-//                        .permitAll()
-//                );
+//                .csrf(csrf -> csrf.disable()) // Disable CSRF for API test
+//                .formLogin(form -> form.disable()) // Disable login form
+//                .httpBasic(basic -> basic.disable()); //Disable Basic Auth
+
+
+                        .requestMatchers("/", "/login", "/register", "/events/public/**", "/ui/events", "/users/add").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/organizer/**").hasRole("ORGANIZER")
+                        .requestMatchers("/participant/**").hasRole("PARTICIPANT")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                .loginPage("/login")
+                .usernameParameter("email") // ← Tell Spring to use 'email' parameter
+                .passwordParameter("password")
+                .successHandler(customAuthenticationSuccessHandler())
+                .failureUrl("/login?error=true")
+                .permitAll()
+        )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                );
 
         return http.build();
     }

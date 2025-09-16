@@ -1,11 +1,7 @@
-package pl.coderslab.roles;
+package pl.coderslab.Controllers_front;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +17,7 @@ import pl.coderslab.locations.LocationService;
 import pl.coderslab.registrations.Registration;
 import pl.coderslab.registrations.RegistrationRepository;
 import pl.coderslab.registrations.RegistrationService;
-import pl.coderslab.registrations.RegistrationStatus;
+import pl.coderslab.roles.RoleService;
 import pl.coderslab.tags.Tag;
 import pl.coderslab.tags.TagService;
 import pl.coderslab.users.User;
@@ -30,7 +26,6 @@ import pl.coderslab.users.dto.CreateUserRequest;
 import pl.coderslab.users.dto.EditUserRequest;
 import pl.coderslab.users.dto.UserResponse;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -1,23 +1,13 @@
-package pl.coderslab.roles;
+package pl.coderslab.Controllers_front;
 
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.coderslab.events.Event;
 import pl.coderslab.events.EventService;
-import pl.coderslab.events.dto.EditEventRequest;
-import pl.coderslab.events.dto.EventResponse;
-import pl.coderslab.events.dto.UpdateEventRequest;
 import pl.coderslab.locations.Location;
 import pl.coderslab.locations.LocationService;
 import pl.coderslab.registrations.Registration;
@@ -26,10 +16,8 @@ import pl.coderslab.tags.Tag;
 import pl.coderslab.tags.TagService;
 import pl.coderslab.users.User;
 import pl.coderslab.users.UserService;
-import pl.coderslab.users.dto.UserResponse;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/participant")
