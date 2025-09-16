@@ -92,14 +92,16 @@ Event → Registrations (One-to-Many) - Event can have multiple registrations
 User → Notifications (One-to-Many) - User can receive multiple notifications
 
 🎨 Screenshots
-Dashboard
+<img width="2380" height="1628" alt="image" src="https://github.com/user-attachments/assets/cd986222-91d0-4001-b0b2-e893b5bedb9b" />
 
 
 Event Details
-Event Details
+<img width="2374" height="1426" alt="image" src="https://github.com/user-attachments/assets/e9989f92-6cc4-45ec-8d2b-9003e6aab837" />
 
-Registration Process
-Registration
+
+Admin Location Dashboard
+<img width="2382" height="1634" alt="image" src="https://github.com/user-attachments/assets/70907201-7654-423b-b1cd-7e16844136aa" />
+
 
 🔐 Security Features
 Password Encryption: BCrypt hashing
