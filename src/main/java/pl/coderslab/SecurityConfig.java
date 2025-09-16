@@ -44,7 +44,7 @@ public class SecurityConfig {
 
 
 
-                        //PART OF CODE WHICH HAS TO BE UNCOMMENTED WHEN YOU NEED TO CHECK HTTP ENDPOINTS
+                        //PART OF CODE WHICH HAS TO BE UNCOMMENTED WHEN YOU NEED TO CHECK HTTP ENDPOINTS AND COMMENT THE REST
 //                        .authorizeHttpRequests(authz -> authz
 //                                .anyRequest().permitAll() // ALL endpoints public
 //                )
