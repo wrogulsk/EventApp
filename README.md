@@ -115,7 +115,7 @@
    cd event-management-app
 2. Configure Database
    #application.properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/eventapp
+   spring.datasource.url=jdbc:mysql://localhost:3306/EventApp?useSSL=false
    spring.datasource.username=root
    spring.datasource.password=
    spring.jpa.hibernate.ddl-auto=update
@@ -124,6 +124,7 @@
    mvn spring-boot:run
 5. Access the Application
 🌐 Web Interface: http://localhost:8080
+6. In SecutityConfig there are comments how to use Http endpoints without login
 
 # 🔗 API Endpoints
 ## Events
