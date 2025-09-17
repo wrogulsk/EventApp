@@ -19,21 +19,23 @@ POST http://localhost:8080/events/add
 Content-Type: application/json
 
 {
-  "title": "Small Discussion Panel",
-  "organizer": "Java School",
-  "startAt": "2025-09-15T17:09:00",
-  "endAt": "2025-09-16T16:09:00",
-  "capacity": 5,
+  "title": "Full-Stack Web Development Bootcamp",
+  "organizer": "CodeCraft Academy",
+  "startAt": "2025-10-15T09:00:00",
+  "endAt": "2025-12-15T16:00:00",
+  "capacity": 35,
   "location": {
-    "id": 12
+    "id": 16
   },
   "user": {
-    "id": 2
+    "id": 3
   },
   "tags": [
-    {"id": 3},
-    {"id": 6},
-    {"id": 7}
+    {"id": 1},
+    {"id": 4},
+    {"id": 8},
+    {"id": 11},
+    {"id": 13}
   ]
 }
 

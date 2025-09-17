@@ -15,11 +15,11 @@ POST http://localhost:8080/users/add
 Content-Type: application/json
 
 {
-  "firstName": "Rebecca",
-  "lastName": "Organizer",
-  "email": "organizer@mail",
-  "password": "Organizer123",
-  "roleIds": [3]
+  "firstName": "Joanna",
+  "lastName": "Sad",
+  "email": "sad@mail.com",
+  "password": "Joanna123",
+  "roleIds": [1]
 }
 
 ### UPDATE user via ID

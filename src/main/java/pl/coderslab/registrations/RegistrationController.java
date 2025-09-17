@@ -69,6 +69,7 @@ public class RegistrationController {
         List<RegistrationUserDto> registrations = registrationService.getUserRegistrations(userId).stream()
                 .map(registration -> new RegistrationUserDto(
                         registration.getId(),
+                        registration.getUser().getLastName(),
                         registration.getStatus().name(),
                         registration.getRegisteredAt(),
                         registration.getEvent().getId(),
@@ -79,8 +80,17 @@ public class RegistrationController {
     }
 
     @GetMapping("/event/{eventId}/participants")
-    public ResponseEntity<List<Registration>> getEventParticipants(@PathVariable Long eventId) {
-        List<Registration> participants = registrationService.getEventParticipants(eventId);
+    public ResponseEntity<List<RegistrationUserDto>> getEventParticipants(@PathVariable Long eventId) {
+        List<RegistrationUserDto> participants = registrationService.getEventParticipants(eventId).stream()
+                .map(registration -> new RegistrationUserDto(
+                        registration.getId(),
+                        registration.getUser().getLastName(),
+                        registration.getStatus().name(),
+                        registration.getRegisteredAt(),
+                        registration.getEvent().getId(),
+                        registration.getEvent().getTitle()
+                ))
+                .toList();
         return ResponseEntity.ok(participants);
     }
 }

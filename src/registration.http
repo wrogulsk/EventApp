@@ -2,10 +2,13 @@
 GET localhost:8080/registrations
 
 ### GET User registration by ID
-GET localhost:8080/registrations/user/14
+GET localhost:8080/registrations/user/4
+
+### GET Event participants by ID
+GET localhost:8080/registrations/event/4/participants
 
 ###POST to register for an event
-POST localhost:8080/registrations/register?userId=1&eventId=21
+POST localhost:8080/registrations/register?userId=1&eventId=6
 
 ###CANCEL registration
 DELETE http://localhost:8080/registrations/37/cancel?userId=17

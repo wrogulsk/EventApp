@@ -1,9 +1,9 @@
 ### POST request to create a comment
-POST http://localhost:8080/comments/add?eventId=5&authorId=20
+POST http://localhost:8080/comments/add?eventId=3&authorId=5
 Content-Type: application/json
 
 {
-  "content": "Let's roll!!"
+  "content": "Can't wait to be there!!"
 }
 
 ### GET comment by ID
