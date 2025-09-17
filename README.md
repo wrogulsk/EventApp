@@ -154,6 +154,11 @@ GET localhost:8080/comments/event/2/search?keyword=awesome
 
 # 🗄 Database Schema
 
+<div align="center">
+  <img width="700" alt="Database Schema" src="https://github.com/user-attachments/assets/c7063eb1-ffcf-4ca0-8e50-845e9ffb79a3" />
+</div>
+
+
 ### 📊 Core Entities
 
 - 👤 **Users** - User accounts with roles
