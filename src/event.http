@@ -1,20 +1,16 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
-
-###GET ALL EVENTS
+###GET all events
 GET http://localhost:8080/events/all
 
-###GET EVENT BY ID
+###GET event by id
 GET http://localhost:8080/events/20
 
-###GET EVENT BY ORGANIZER
+###GET event by organizer
 GET http://localhost:8080/events/organizer/Tech Events Poland
 
-###GET EVENTS BY LOCATION
+###GET event by location
 GET http://localhost:8080/events/locations/6
 
-### GET EVENTS BY CITY
+### GET events by city
 GET http://localhost:8080/events/cities/Warszawa
 Accept: application/json
 
@@ -23,32 +19,31 @@ POST http://localhost:8080/events/add
 Content-Type: application/json
 
 {
-  "title": "Spring Boot Advanced Workshop",
-  "organizer": "Java Masters Academy",
-  "startAt": "2025-10-15T10:15:00",
-  "endAt": "2025-10-15T16:16:00",
-  "capacity": 25,
+  "title": "Small Discussion Panel",
+  "organizer": "Java School",
+  "startAt": "2025-09-15T17:09:00",
+  "endAt": "2025-09-16T16:09:00",
+  "capacity": 5,
   "location": {
-    "id": 6
+    "id": 12
   },
   "user": {
-    "id":5
+    "id": 2
   },
   "tags": [
-    {"id": 1},
-    {"id": 4},
+    {"id": 3},
+    {"id": 6},
     {"id": 7}
   ]
 }
 
-
-###PUT request
+###PUT request to update event
 PUT localhost:8080/events/update/19
 Content-Type: application/json
 
 {
   "title": "JPA Masterclass",
-  "organizer": "Java Sztos Academy",
+  "organizer": "Java Teaching Academy",
   "startAt": "2025-12-10T09:00:00",
   "endAt": "2025-12-10T17:00:00",
   "capacity": 100,

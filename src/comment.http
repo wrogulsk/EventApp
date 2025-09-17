@@ -1,7 +1,3 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
-
 ### POST request to create a comment
 POST http://localhost:8080/comments/add?eventId=5&authorId=20
 Content-Type: application/json

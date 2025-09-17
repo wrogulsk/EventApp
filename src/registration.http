@@ -1,7 +1,3 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
-
 ### GET all registrations
 GET localhost:8080/registrations
 
@@ -9,11 +5,11 @@ GET localhost:8080/registrations
 GET localhost:8080/registrations/user/14
 
 ###POST to register for an event
-POST localhost:8080/registrations/register?userId=4&eventId=6
+POST localhost:8080/registrations/register?userId=1&eventId=21
 
 ###CANCEL registration
 DELETE http://localhost:8080/registrations/37/cancel?userId=17
 
 ###DELETE entirely registration
-DELETE http://localhost:8080/registrations/36/delete
+DELETE http://localhost:8080/registrations/47/delete
 

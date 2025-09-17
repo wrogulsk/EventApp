@@ -23,14 +23,14 @@ public record CreateEventRequest(
         String organizer,
 
         @NotNull(message = "Event date is required")
-        @Future(message = "Event date must be in the future")
+        @Future(message = "Event date must be in the future and can't be the same as the other event")
         LocalDateTime startAt,
 
         @NotNull(message = "Event date is required")
-        @Future(message = "Event date must be in the future")
+        @Future(message = "Event date must be in the future nd can't be the same as the other event")
         LocalDateTime endAt,
 
-        @NotNull(message = "Amount of participants can't be bigger than capacity of location")
+        @NotNull(message = "Amount of participants can't be empty")
         Integer capacity,
 
         @NotNull(message = "Choose location")
