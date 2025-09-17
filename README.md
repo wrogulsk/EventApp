@@ -173,6 +173,8 @@ GET localhost:8080/comments/event/2/search?keyword=awesome
 - 👤 **User → Registrations** (One-to-Many) - *User can register for multiple events*
 - 🎪 **Event → Registrations** (One-to-Many) - *Event can have multiple registrations*
 - 👤 **User → Notifications** (One-to-Many) - *User can receive multiple notifications*
+- 🎪 **Events → Tags** (Many-to-Many) - *Event can have multiple tags*
+
 
 ---
 
