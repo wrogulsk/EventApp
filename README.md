@@ -129,10 +129,10 @@
 # 🔗 API Endpoints
 ## Events
 Get event by ID
-GET http://localhost:8080/events/20
+GET localhost:8080/events/20
 
 Get events by location
-GET http://localhost:8080/events/locations/6
+GET localhost:8080/events/locations/6
 
 Delete event
 DELETE localhost:8080/events/delete/15
@@ -146,10 +146,10 @@ POST localhost:8080/registrations/register?userId=4&eventId=6
 
 ## Comments
 Get comment by ID
-GET http://localhost:8080/comments/3
+GET localhost:8080/comments/3
 
 Search comments by keyword
-GET http://localhost:8080/comments/event/2/search?keyword=awesome
+GET localhost:8080/comments/event/2/search?keyword=awesome
 
 
 # 🗄 Database Schema
