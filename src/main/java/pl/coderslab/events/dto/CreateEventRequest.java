@@ -13,6 +13,7 @@ import pl.coderslab.users.User;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+
 public record CreateEventRequest(
         @NotBlank(message = "Title is required")
         @Size(min = 5, max = 80, message = "Title must be between 5 - 80 characters")
@@ -47,4 +48,9 @@ public record CreateEventRequest(
         public Object getEventDate() {
                 return startAt;
         }
+
+        public String getTitle() {
+            return title;
+        }
+
 }

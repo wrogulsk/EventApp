@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/organizer")
+
 public class OrganizerController {
 
     private final EventService eventService;

@@ -10,11 +10,9 @@ import java.util.List;
 @RequestMapping("/notifications")
 public class NotificationController {
     private final NotificationService notificationService;
-    private final RegistrationService registrationService;
 
     public NotificationController(NotificationService notificationService, RegistrationService registrationService) {
         this.notificationService = notificationService;
-        this.registrationService = registrationService;
     }
 
     @GetMapping("/user/{userId}")

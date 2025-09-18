@@ -21,7 +21,6 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/participant")
-//@PreAuthorize("hasRole('PARTICIPANT')")
 
 public class ParticipantController {
 

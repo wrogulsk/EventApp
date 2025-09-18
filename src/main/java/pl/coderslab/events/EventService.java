@@ -163,42 +163,12 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public Registration registerUserForEvent(Long userId, Long eventId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event not found"));
-        boolean alreadyRegistered = registrationRepository.existsByUserIdAndEventId(userId, eventId);
-        if (alreadyRegistered) {
-            throw new IllegalStateException("User is already registered for this event");
-        }
-
-
-        if (event.getCapacity() != 0) {
-            long currentRegistrations = registrationRepository.countByEventId(eventId);
-            if (currentRegistrations >= event.getCapacity()) {
-                throw new IllegalStateException("Event is at full capacity");
-            }
-        }
-        Registration registration = new Registration();
-        registration.setUser(user);
-        registration.setEvent(event);
-        registration.setRegisteredAt(LocalDateTime.now());
-        registration.setStatus(RegistrationStatus.CONFIRMED);
-        return registrationRepository.save(registration);
-    }
-
     public boolean isUserRegisteredForEvent(Long userId, Long eventId) {
         return registrationRepository.existsByUserIdAndEventId(userId, eventId);
     }
 
     public List<Registration> getEventRegistrations(Long eventId) {
         return registrationRepository.findByEventId(eventId);
-    }
-
-    public List<Registration> getUserRegistrations(Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        return registrationRepository.findRegistrationsByUserId(userId);
     }
 
     public List<Event> findEventsWithFilters(String search, Long locationId, Long tagId, String sortBy) {

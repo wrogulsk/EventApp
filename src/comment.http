@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### GET comment by ID
-GET http://localhost:8080/comments/3
+GET http://localhost:8080/comments/1
 
 ### GET comments by EVENT ID
 GET http://localhost:8080/comments/event/6

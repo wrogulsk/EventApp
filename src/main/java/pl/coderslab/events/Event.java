@@ -80,26 +80,6 @@ public class Event {
     @JsonIgnoreProperties("events")
     private Set<Tag> tags = new HashSet<>();
 
-    public void addRegistration(Registration registration) {
-        registrations.add(registration);
-        registration.setEvent(this);
-    }
-
-    public void addInvitation(Invitation invitation) {
-        invitations.add(invitation);
-        invitation.setEvent(this);
-    }
-
-    public void addTag(Tag tag) {
-        tags.add(tag);
-        tag.getEvents().add(this);
-    }
-
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
-        tag.getEvents().remove(this);
-    }
-
     public int getRegisteredCount() {
         if (registrations == null) {
             return 0;

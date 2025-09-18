@@ -28,5 +28,4 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     List<Invitation> findBySentAtBeforeAndStatus(LocalDateTime cutoffDate, InvitationStatus status);
 
-    boolean existsByEventIdAndEmail(Long eventId, String email);
 }

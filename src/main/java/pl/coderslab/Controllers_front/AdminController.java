@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
+
 public class AdminController {
 
     private final UserService userService;

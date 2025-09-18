@@ -59,7 +59,4 @@ public class Location {
     @JsonIgnore
     private Set<Event> events = new HashSet<>();
 
-    public boolean canAccommodate(Integer requiredCapacity) {
-        return capacity == null || requiredCapacity == null || capacity >= requiredCapacity;
-    }
 }

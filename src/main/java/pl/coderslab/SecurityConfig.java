@@ -41,7 +41,7 @@ public class SecurityConfig {
 //                        .ignoringRequestMatchers("/users/add") // ← Disable CSRF for such endpoint
 //                )
 //                .authorizeHttpRequests(authz -> authz
-
+//
 
 
                         //PART OF CODE WHICH HAS TO BE UNCOMMENTED WHEN YOU NEED TO CHECK HTTP ENDPOINTS AND COMMENT THE REST
