@@ -2,6 +2,7 @@ package pl.coderslab.notifications;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.registrations.RegistrationService;
 
 import java.util.List;
 
@@ -9,20 +10,36 @@ import java.util.List;
 @RequestMapping("/notifications")
 public class NotificationController {
     private final NotificationService notificationService;
+    private final RegistrationService registrationService;
 
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService, RegistrationService registrationService) {
         this.notificationService = notificationService;
+        this.registrationService = registrationService;
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
-        List<Notification> notifications = notificationService.getUserNotifications(userId);
+    public ResponseEntity<List<NotificationDTO>> getUserNotifications(@PathVariable Long userId) {
+        List<NotificationDTO> notifications = notificationService.getUserNotifications(userId).stream()
+                .map(notification -> new NotificationDTO(
+                        notification.getUser().getLastName(),
+                        notification.getEvent().getTitle() ,
+                        notification.getMessage(),
+                        notification.getIsRead()
+                ))
+                .toList();
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/user/{userId}/unread")
-    public ResponseEntity<List<Notification>> getUnreadNotifications(@PathVariable Long userId) {
-        List<Notification> notifications = notificationService.getUnreadNotifications(userId);
+    public ResponseEntity<List<NotificationDTO>> getUnreadNotifications(@PathVariable Long userId) {
+        List<NotificationDTO> notifications = notificationService.getUnreadNotifications(userId).stream()
+                .map(notification -> new NotificationDTO(
+                        notification.getUser().getLastName(),
+                        notification.getEvent().getTitle() ,
+                        notification.getMessage(),
+                        notification.getIsRead()
+                ))
+                .toList();
         return ResponseEntity.ok(notifications);
     }
 
@@ -33,14 +50,14 @@ public class NotificationController {
     }
 
     @PutMapping("/{id}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long id, @RequestParam Long userId) {
+    public ResponseEntity<String> markAsRead(@PathVariable Long id, @RequestParam Long userId) {
         notificationService.markAsRead(id, userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Marked as read");
     }
 
     @PutMapping("/user/{userId}/read-all")
-    public ResponseEntity<Void> markAllAsRead(@PathVariable Long userId) {
+    public ResponseEntity<String> markAllAsRead(@PathVariable Long userId) {
         notificationService.markAllAsRead(userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("All notifications marked as read");
     }
 }

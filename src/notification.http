@@ -1,0 +1,13 @@
+### GET all notifications of the user
+GET http://localhost:8080/notifications/user/5
+Content-Type: application/json
+
+### GET all unread notifications of the user
+GET http://localhost:8080/notifications/user/1/unread
+Content-Type: application/json
+
+### PUT request to mark notification as read
+PUT http://localhost:8080/notifications/2/read?userId=3
+
+### PUT request to mark all notifications as read
+PUT http://localhost:8080/notifications/user/5/read-all

@@ -1,10 +1,10 @@
 package pl.coderslab.registrations;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.events.EventService;
-import pl.coderslab.users.UserService;
+import pl.coderslab.registrations.dto.RegistrationDTO;
+import pl.coderslab.registrations.dto.RegistrationUserDto;
 
 import java.util.List;
 

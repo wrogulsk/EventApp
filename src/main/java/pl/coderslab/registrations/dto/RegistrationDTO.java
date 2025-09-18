@@ -1,4 +1,4 @@
-package pl.coderslab.registrations;
+package pl.coderslab.registrations.dto;
 
 import java.time.LocalDateTime;
 
